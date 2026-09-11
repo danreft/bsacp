@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+/*
+ * Boa Safra Ag — client portal design tokens.
+ * Visual language mirrors the existing "RFS Next" app: light gray page,
+ * white cards, dark green primary actions, serif page headings.
+ */
+@theme {
+  --color-brand-50: #f0f6f1;
+  --color-brand-100: #dbebde;
+  --color-brand-200: #b9d7c0;
+  --color-brand-300: #8dbb99;
+  --color-brand-400: #5c9a6f;
+  --color-brand-500: #3b7d51;
+  --color-brand-600: #2b6540;
+  --color-brand-700: #1f4d31;
+  --color-brand-800: #183d27;
+  --color-brand-900: #12301f;
+
+  --color-canvas: #f4f5f4;
+  --color-ink: #1b2420;
+  --color-muted: #5d6b64;
+  --color-hairline: #dfe3e0;
+
+  --font-serif: ui-serif, Georgia, "Times New Roman", Times, serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Visible focus everywhere — keyboard users must always know where they are. */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+@layer utilities {
+  .page-heading {
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
+  }
+
+  /* Screen-reader-only text that becomes visible when focused (skip links). */
+  .sr-only-focusable:not(:focus):not(:focus-within) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-toast-in {
+  animation: toast-in 160ms ease-out;
+}
