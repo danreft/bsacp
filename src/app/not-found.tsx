@@ -10,7 +10,7 @@ export default function NotFound() {
         icon={<Compass aria-hidden="true" className="h-6 w-6" />}
         title="Page not found"
         description="That page does not exist, or it belongs to another organization."
-        action={<LinkButton href="/">Back to dashboard</LinkButton>}
+        action={<LinkButton href="/">Back to engagements</LinkButton>}
       />
     </div>
   );

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { DocumentBrowser } from "@/components/document-browser";
-import { LifecycleStepper } from "@/components/lifecycle-stepper";
 import { EngagementStatusBadge } from "@/components/status-badge";
 import { Card, DetailItem } from "@/components/ui";
 import { requireSession } from "@/lib/auth";
@@ -48,7 +47,7 @@ export default async function EngagementDetailPage({
   return (
     <>
       <Link
-        href="/engagements"
+        href="/"
         className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-muted underline-offset-2 hover:text-brand-700 hover:underline"
       >
         <ArrowLeft aria-hidden="true" className="h-4 w-4" />
@@ -68,7 +67,8 @@ export default async function EngagementDetailPage({
           <EngagementStatusBadge status={engagement.status} />
         </div>
 
-        <dl className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <details className="mt-4"><summary className="cursor-pointer text-sm font-medium text-brand-700">Engagement details</summary>
+        <dl className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <DetailItem label="Legal owner">{engagement.legalOwner}</DetailItem>
           <DetailItem label="Fields">
             {engagement.fields.join(", ")}
@@ -79,7 +79,7 @@ export default async function EngagementDetailPage({
           <DetailItem label="Last modified">
             {formatDate(engagement.updatedAt)}
           </DetailItem>
-        </dl>
+        </dl></details>
 
         {until ? (
           <p
@@ -96,21 +96,17 @@ export default async function EngagementDetailPage({
         ) : null}
       </Card>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[16rem_minmax(0,1fr)]">
-        <Card className="h-fit p-4 lg:sticky lg:top-4">
-          <LifecycleStepper steps={steps} />
-        </Card>
-
-        <div className="min-w-0">
-          <h2 className="mb-4 text-sm font-semibold tracking-wide text-ink uppercase">
-            Documents
-          </h2>
-          <DocumentBrowser
-            rows={rows}
-            documentTypes={documentTypes}
-            groupByType
-            enableBulkSelect
-          />
+      <div className="mt-6 space-y-6">
+        {steps.some((step) => step.isAwaitingClient) ? (
+          <div className="rounded-lg border border-orange-200 bg-orange-50 p-4 text-sm text-orange-900">
+            <h2 className="font-semibold">Needed from you</h2>
+            <p className="mt-1">{steps.filter((step) => step.isAwaitingClient).map((step) => step.documentType.name).join(", ")}</p>
+            <p className="mt-2">Send these to your engagement lead.</p>
+          </div>
+        ) : null}
+        <div>
+          <h2 className="mb-3 text-lg font-semibold text-ink">Documents</h2>
+          <DocumentBrowser rows={rows} documentTypes={documentTypes} />
         </div>
       </div>
     </>

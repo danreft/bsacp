@@ -5,6 +5,18 @@ judgment calls worth a second look.
 
 ---
 
+## Client experience update — September 11, 2026
+
+The engagement list is now the home page, with All documents as a secondary
+navigation link and Account in the avatar menu. Engagement cards replace the
+wide overview table and dashboard statistics. The detail page uses a compact
+requested-document summary and a single document list. Filters, engagement
+metadata, version history, and owner download activity expand on demand.
+
+This supersedes the visible stepper, upload drop zones (Q13), and disabled
+notification controls (Q15) described below. Those future features stay on the
+roadmap. Access, retention, preview, and download rules are unchanged.
+
 ## Decided (implemented)
 
 ### Org and access model

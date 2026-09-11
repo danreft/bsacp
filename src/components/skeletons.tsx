@@ -42,11 +42,11 @@ export function CardGridSkeleton({ cards = 3 }: { cards?: number }) {
       <span className="sr-only">Loading…</span>
       <Shimmer className="h-9 w-72" />
       <Shimmer className="mt-3 h-4 w-80 max-w-full" />
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-6 grid gap-4">
         {Array.from({ length: cards }).map((_, index) => (
           <Card key={index} className="p-5">
             <Shimmer className="h-3 w-24" />
-            <Shimmer className="mt-4 h-8 w-16" />
+            <Shimmer className="mt-4 h-6 w-48" />
             <Shimmer className="mt-4 h-3 w-full" />
           </Card>
         ))}

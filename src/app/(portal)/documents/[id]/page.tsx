@@ -48,11 +48,11 @@ export default async function DocumentDetailPage({
   return (
     <>
       <Link
-        href="/documents"
+        href={`/engagements/${engagement.id}`}
         className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-muted underline-offset-2 hover:text-brand-700 hover:underline"
       >
         <ArrowLeft aria-hidden="true" className="h-4 w-4" />
-        All documents
+        {engagement.name}
       </Link>
 
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
@@ -110,7 +110,8 @@ export default async function DocumentDetailPage({
           </Card>
 
           {isOwner ? (
-            <Card className="overflow-hidden">
+            <details className="overflow-hidden rounded-lg border border-hairline bg-white">
+              <summary className="cursor-pointer px-5 py-4 text-sm font-semibold text-brand-700">Download activity</summary>
               <CardHeader
                 title={
                   <span className="flex items-center gap-2">
@@ -170,7 +171,7 @@ export default async function DocumentDetailPage({
                   </table>
                 </div>
               )}
-            </Card>
+            </details>
           ) : null}
         </div>
 
@@ -223,7 +224,8 @@ export default async function DocumentDetailPage({
           </Card>
 
           {document.previousVersions?.length ? (
-            <Card className="overflow-hidden">
+            <details className="overflow-hidden rounded-lg border border-hairline bg-white">
+              <summary className="cursor-pointer px-5 py-4 text-sm font-semibold text-brand-700">Version history</summary>
               <CardHeader
                 title={
                   <span className="flex items-center gap-2">
@@ -297,7 +299,7 @@ export default async function DocumentDetailPage({
                   </li>
                 ))}
               </ol>
-            </Card>
+            </details>
           ) : null}
         </div>
       </div>

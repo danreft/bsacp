@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, Eye, Search, Upload, X } from "lucide-react";
+import { Download, Eye, Search, X } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
@@ -11,9 +11,7 @@ import {
   DOCUMENT_STATUSES,
   DOCUMENT_STATUS_META,
   UPLOADER_KINDS,
-  formatBytes,
   formatDate,
-  formatUploader,
   isDownloadable,
 } from "@/lib/format";
 import type { DocumentType, Engagement, UploaderKind } from "@/lib/types";
@@ -235,7 +233,7 @@ export function DocumentBrowser({
     (enableBulkSelect ? 1 : 0) +
     (groupByType ? 0 : 1) +
     (showEngagementColumn ? 1 : 0) +
-    4;
+    2;
 
   const tableProps = {
     columnCount,
@@ -270,40 +268,47 @@ export function DocumentBrowser({
             </span>
           </label>
 
-          <Select
-            label="Document type"
-            value={filters.typeId}
-            onChange={(value) => setFilter("typeId", value)}
-            options={typeOptions}
-          />
-          {presentStatuses.length > 1 ? (
-            <Select
-              label="Status"
-              value={filters.status}
-              onChange={(value) => setFilter("status", value)}
-              options={statusOptions}
-            />
-          ) : null}
-          <Select
-            label="Uploaded by"
-            value={filters.uploadedBy}
-            onChange={(value) => setFilter("uploadedBy", value)}
-            options={uploaderOptions}
-          />
-          {engagements ? (
-            <Select
-              label="Engagement"
-              value={filters.engagementId}
-              onChange={(value) => setFilter("engagementId", value)}
-              options={[
-                { value: ALL, label: "All engagements" },
-                ...engagements.map((engagement) => ({
-                  value: engagement.id,
-                  label: engagement.name,
-                })),
-              ]}
-            />
-          ) : null}
+          <details className="w-full">
+            <summary className="w-fit cursor-pointer text-sm font-medium text-brand-700">
+              Filters{Object.entries(filters).some(([key, value]) => key !== "search" && value !== ALL) ? " (active)" : ""}
+            </summary>
+            <div className="mt-3 flex flex-wrap items-end gap-3">
+                <Select
+                  label="Document type"
+                  value={filters.typeId}
+                  onChange={(value) => setFilter("typeId", value)}
+                  options={typeOptions}
+                />
+                {presentStatuses.length > 1 ? (
+                  <Select
+                    label="Status"
+                    value={filters.status}
+                    onChange={(value) => setFilter("status", value)}
+                    options={statusOptions}
+                  />
+                ) : null}
+                <Select
+                  label="Uploaded by"
+                  value={filters.uploadedBy}
+                  onChange={(value) => setFilter("uploadedBy", value)}
+                  options={uploaderOptions}
+                />
+                {engagements ? (
+                  <Select
+                    label="Engagement"
+                    value={filters.engagementId}
+                    onChange={(value) => setFilter("engagementId", value)}
+                    options={[
+                      { value: ALL, label: "All engagements" },
+                      ...engagements.map((engagement) => ({
+                        value: engagement.id,
+                        label: engagement.name,
+                      })),
+                    ]}
+                  />
+                ) : null}
+            </div>
+          </details>
 
           {filtersActive ? (
             <Button
@@ -354,7 +359,6 @@ export function DocumentBrowser({
             const allTypeRows = rows.filter(
               (row) => row.documentType.id === documentType.id,
             );
-            const hasFiles = allTypeRows.some((row) => row.document.fileUrl);
 
             return (
               <Card key={documentType.id} className="overflow-hidden">
@@ -381,7 +385,7 @@ export function DocumentBrowser({
                     {...tableProps}
                     rows={typeRows}
                     caption={`${documentType.name} documents`}
-                    minWidthClass="min-w-[46rem]"
+                    minWidthClass="min-w-[36rem]"
                     showTypeColumn={false}
                   />
                 ) : allTypeRows.length > 0 ? (
@@ -392,14 +396,7 @@ export function DocumentBrowser({
                   <AwaitingPanel documentType={documentType} />
                 )}
 
-                {/*
-                  Upload lands per document type, so the extension point sits
-                  inside the step it belongs to rather than as one generic
-                  action somewhere else.
-                */}
-                {documentType.providedBy === "client" && !hasFiles ? (
-                  <UploadDropZone documentType={documentType} />
-                ) : null}
+
               </Card>
             );
           })}
@@ -411,7 +408,7 @@ export function DocumentBrowser({
               {...tableProps}
               rows={visibleRows}
               caption="All documents"
-              minWidthClass="min-w-[60rem]"
+              minWidthClass="min-w-[40rem]"
               showTypeColumn
             />
           ) : (
@@ -451,35 +448,13 @@ function AwaitingPanel({ documentType }: { documentType: DocumentType }) {
           awaitingClient ? "text-orange-900" : "text-ink",
         )}
       >
-        {awaitingClient ? "Awaiting your upload" : "Awaiting Boa Safra Ag"}
+        {awaitingClient ? "Needed from you" : "Awaiting Boa Safra Ag"}
       </p>
       <p className="mt-0.5 text-xs text-muted">
         {awaitingClient
-          ? "Nothing has been filed yet."
+          ? "Send this document to your engagement lead."
           : "We will post these here as soon as they are ready."}
       </p>
-    </div>
-  );
-}
-
-/** Disabled placeholder for the per-document-type upload flow. */
-function UploadDropZone({ documentType }: { documentType: DocumentType }) {
-  return (
-    <div className="px-4 pt-1 pb-4">
-      <div
-        title="Coming soon"
-        aria-disabled="true"
-        className="flex cursor-not-allowed flex-col items-center justify-center gap-1.5 rounded-lg border-2 border-dashed border-hairline bg-canvas/60 px-4 py-6 text-center"
-      >
-        <Upload aria-hidden="true" className="h-5 w-5 text-muted" />
-        <p className="text-sm font-medium text-muted">
-          Upload your {documentType.name} here
-        </p>
-        <p className="text-xs text-muted">
-          Coming soon — for now your engagement lead will collect these
-          directly.
-        </p>
-      </div>
     </div>
   );
 }
@@ -552,13 +527,7 @@ function DocumentTable({
               Status
             </th>
             <th scope="col" className="px-3 py-2.5 font-semibold">
-              Uploaded by
-            </th>
-            <th scope="col" className="px-3 py-2.5 font-semibold">
               Date
-            </th>
-            <th scope="col" className="px-3 py-2.5 text-right font-semibold">
-              Size
             </th>
             <th scope="col" className="px-3 py-2.5 text-right font-semibold">
               Actions
@@ -636,14 +605,8 @@ function DocumentTable({
                 <td className="px-3 py-3 align-middle">
                   <DocumentStatusBadge status={row.document.status} />
                 </td>
-                <td className="px-3 py-3 align-middle text-muted">
-                  {formatUploader(row.document.uploadedBy)}
-                </td>
                 <td className="px-3 py-3 align-middle whitespace-nowrap text-muted">
                   {formatDate(row.document.uploadedAt)}
-                </td>
-                <td className="px-3 py-3 text-right align-middle whitespace-nowrap text-muted tabular-nums">
-                  {formatBytes(row.document.sizeBytes)}
                 </td>
                 <td className="px-3 py-3 align-middle">
                   <div className="flex items-center justify-end gap-2">
@@ -666,7 +629,7 @@ function DocumentTable({
                       </Button>
                     ) : (
                       <span className="text-xs whitespace-nowrap text-muted">
-                        {previewable ? "Preview only" : "Awaiting upload"}
+                        {previewable ? "Preview only" : "Requested"}
                       </span>
                     )}
                   </div>

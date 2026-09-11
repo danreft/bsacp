@@ -9,6 +9,16 @@ simple bordered tables, and the blue environment banner across the top.
 This is a **mockup for stakeholder review**, not production code. There is no
 database and no upload flow; clients are read-only.
 
+## Client experience
+
+The home page lists engagements directly. Open one to see requested documents,
+preview files, and download final documents. **All documents** provides search
+across engagements, with optional filters and bulk download. Account is in the
+avatar menu. Engagement details, version history, and owner download activity
+expand on demand. Upload and notification placeholders are hidden until those
+features are available. Existing `/engagements` bookmarks redirect to `/`,
+preserving `?archived=1`.
+
 ---
 
 ## Running it
@@ -292,11 +302,10 @@ and a `clientOrgId`, `documents` referencing the new `documentTypeId`s.
 
 That is it. Specifically, what happens for free:
 
-- **`/` (Dashboard)** renders one section per product, so the new product
-  becomes a second section. There is deliberately no product picker while there
-  is only one product.
-- **`/engagements`** already shows the product name under each engagement.
-- **`/engagements/[id]`** builds its stepper from
+- **`/` (Engagements)** lists the organization’s engagements and shows the
+  product name on each card.
+- **`/engagements`** redirects to the engagement home page.
+- **`/engagements/[id]`** builds its requested-document summary from
   `getDocumentTypesForProduct(engagement.productId)`, so the new lifecycle
   renders with however many steps it has.
 - **`/documents`** widens its type filter to cover every product the
@@ -318,8 +327,8 @@ src/
     (auth)/sign-in/[[...sign-in]]/ Clerk <SignIn /> or the dev-bypass notice
     (portal)/
       layout.tsx                   requires a session, renders the app shell
-      page.tsx                     dashboard
-      engagements/                 list (+ archived toggle) and [id] detail
+      page.tsx                     engagement home
+      engagements/                 legacy list redirect and [id] detail
       documents/                   library and [id] detail (preview, versions, audit)
       account/                     profile, organization + members, notification prefs
   components/                      app shell, org switcher, document browser, stepper

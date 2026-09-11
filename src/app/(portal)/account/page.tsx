@@ -1,4 +1,4 @@
-import { Bell, Building2, KeyRound, Mail } from "lucide-react";
+import { Building2, Mail } from "lucide-react";
 import type { Metadata } from "next";
 
 import { Badge, Card, CardHeader, DetailItem, PageHeading } from "@/components/ui";
@@ -26,7 +26,6 @@ export default async function AccountPage() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="order-2 min-w-0 space-y-6 lg:order-1">
           {clerkEnabled ? <ClerkProfile /> : <DevBypassProfile session={session} />}
-          <NotificationPreferences />
         </div>
 
         <div className="order-1 space-y-6 lg:order-2">
@@ -139,69 +138,6 @@ function OrgCard({
   );
 }
 
-const NOTIFICATION_OPTIONS = [
-  {
-    id: "new-document",
-    label: "New document posted",
-    description: "Email me when a final document is added to an engagement.",
-  },
-  {
-    id: "action-needed",
-    label: "Action needed",
-    description: "Email me when Boa Safra Ag requests something from me.",
-  },
-  {
-    id: "daily-digest",
-    label: "Daily digest",
-    description: "Roll the day's activity into a single email instead.",
-  },
-];
-
-/** Placeholder for the notification work on the roadmap. */
-function NotificationPreferences() {
-  return (
-    <Card className="overflow-hidden">
-      <CardHeader
-        title={
-          <span className="flex items-center gap-2">
-            <Bell aria-hidden="true" className="h-4 w-4 text-muted" />
-            Notification preferences
-          </span>
-        }
-        action={
-          <Badge className="bg-gray-100 text-gray-700 ring-gray-300">
-            Coming soon
-          </Badge>
-        }
-      />
-      <ul className="divide-y divide-hairline">
-        {NOTIFICATION_OPTIONS.map((option) => (
-          <li
-            key={option.id}
-            className="flex items-start justify-between gap-4 px-5 py-4"
-          >
-            <label htmlFor={option.id} className="min-w-0 cursor-not-allowed">
-              <span className="block text-sm font-medium text-muted">
-                {option.label}
-              </span>
-              <span className="mt-0.5 block text-xs text-muted">
-                {option.description}
-              </span>
-            </label>
-            <input
-              id={option.id}
-              type="checkbox"
-              disabled
-              title="Coming soon"
-              className="mt-1 h-4 w-4 shrink-0 cursor-not-allowed rounded border-hairline accent-brand-700 opacity-50"
-            />
-          </li>
-        ))}
-      </ul>
-    </Card>
-  );
-}
-
 async function ClerkProfile() {
   const { UserProfile } = await import("@clerk/nextjs");
   return (
@@ -217,34 +153,8 @@ function DevBypassProfile({ session }: { session: PortalSession }) {
     <Card className="overflow-hidden">
       <CardHeader
         title="Profile"
-        description="Clerk's account management renders here once keys are configured."
       />
       <div className="space-y-5 px-5 py-5">
-        <div className="flex items-start gap-3 rounded-md bg-amber-50 px-4 py-3 ring-1 ring-amber-200 ring-inset">
-          <KeyRound
-            aria-hidden="true"
-            className="mt-0.5 h-4 w-4 shrink-0 text-amber-700"
-          />
-          <p className="text-sm text-amber-900">
-            Running on the dev bypass identity. Add{" "}
-            <code className="rounded bg-white/70 px-1 py-0.5 text-xs">
-              NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-            </code>{" "}
-            and{" "}
-            <code className="rounded bg-white/70 px-1 py-0.5 text-xs">
-              CLERK_SECRET_KEY
-            </code>{" "}
-            to{" "}
-            <code className="rounded bg-white/70 px-1 py-0.5 text-xs">
-              .env.local
-            </code>{" "}
-            to replace this panel with Clerk&rsquo;s{" "}
-            <code className="rounded bg-white/70 px-1 py-0.5 text-xs">
-              &lt;UserProfile /&gt;
-            </code>
-            .
-          </p>
-        </div>
         <dl className="grid gap-5 sm:grid-cols-2">
           <DetailItem label="Name">{session.user.fullName}</DetailItem>
           <DetailItem label="Email">{session.user.email}</DetailItem>

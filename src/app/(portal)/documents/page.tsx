@@ -41,7 +41,7 @@ export default async function DocumentsPage() {
           icon={<FileText aria-hidden="true" className="h-6 w-6" />}
           title="No documents yet"
           description="Documents exchanged during your engagements will collect here, where you can search, filter, and download them."
-          action={<LinkButton href="/engagements">View engagements</LinkButton>}
+          action={<LinkButton href="/">View engagements</LinkButton>}
         />
       </>
     );
